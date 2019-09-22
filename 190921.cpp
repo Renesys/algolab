@@ -4,20 +4,20 @@
 #include "pch.h"
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <deque>
 #include <algorithm>
 #define MAX 1000000002
 using namespace std;
 
 int m[1001][1001];
 
-struct Edge{
+struct Edge {
 	int a;
 	int b;
 	int v;
 	int diff;
 };
-vector<Edge> edges;
+deque<Edge> edges;
 int group[1001];
 int treerank[1001];
 
@@ -33,7 +33,7 @@ void uni(int a, int b) {
 	if (pa != pb) {
 		int ra = treerank[pa];
 		int rb = treerank[pb];
-		if(ra <= rb){
+		if (ra <= rb) {
 			group[pa] = pb;
 			if (ra == rb) {
 				treerank[pa]++;
@@ -61,10 +61,7 @@ int main()
 		int N, E;
 		f >> N >> E;
 		//scanf("%d %d", &N, &E);
-		for (int i = 1; i <= N; i++) {
-			group[i] = i;
-			treerank[i] = 1;
-		}
+
 		for (int i = 0; i < E; i++) {
 			int a, b, v;
 			f >> a >> b >> v;
@@ -77,55 +74,16 @@ int main()
 		//scanf("%d %d", &start, &end);
 
 		sort(edges.begin(), edges.end(), cmp);
-		//kruskal
-		int M = -1;
-		int m = MAX;
-		for (auto e : edges) {
-			if (group[start] == group[end]) break;
-			if (find_root(e.a) != find_root(e.b)) {
-				cout << e.a << ' ' << e.b << ' ' << e.v << endl;
-				if (e.v > M) {
-					M = e.v;
-				}
-				if (e.v < m) {
-					m = e.v;
-				}
-				uni(e.a, e.b);
 
-				for (int i = 1; i <= N; i++) {
-					cout << group[i] << ' ';
-				}
-				cout << endl;
-
-			}
-		}
-		cout << M - m << endl;
-
-		/*
-		vector<Edge> candidate;
-		for (auto e : edges) {
-			if (e.a == start || e.b == start) {
-				candidate.push_back(e);
-			}
-		}
-
-		for (auto vertex : candidate) {
+		int res = MAX;
+		while (!edges.empty()) {
+			//kruskal
+			int M = -1;
+			int m = MAX;
 			for (int i = 1; i <= N; i++) {
 				group[i] = i;
 				treerank[i] = 1;
 			}
-			cout << vertex.a << ' ' << vertex.b << ' ' << vertex.v << endl;
-			for (int i = 0; i < edges.size(); i++) {
-				edges[i].diff = edges[i].v - vertex.v;
-			}
-			sort(edges.begin(), edges.end(), cmp);
-			for (auto e : edges) {
-				cout << e.a << ' ' << e.b << ' ' << e.v << ' ' << e.diff << endl;
-			}
-
-			//kruskal
-			int M = -1;
-			int m = MAX;
 			for (auto e : edges) {
 				if (group[start] == group[end]) break;
 				if (find_root(e.a) != find_root(e.b)) {
@@ -137,18 +95,22 @@ int main()
 						m = e.v;
 					}
 					uni(e.a, e.b);
-	
+
 					for (int i = 1; i <= N; i++) {
 						cout << group[i] << ' ';
 					}
 					cout << endl;
-
 				}
 			}
-			cout << M - m << endl;
+			if (find_root(start) != find_root(end)) {
+				break;
+			}
+			edges.pop_front();
+			if (M - m < res) {
+				res = M - m;
+			}
 		}
-		cout << "------------" << endl;
-		*/
-		
+		cout << res << endl;
+
 	}
 }
