@@ -101,16 +101,21 @@ int main()
 					}
 					cout << endl;
 				}
+				if (find_root(start) == find_root(end)) {
+					break;
+				}
 			}
+
 			if (find_root(start) != find_root(end)) {
 				break;
 			}
+			cout << M - m << endl;
 			edges.pop_front();
 			if (M - m < res) {
 				res = M - m;
 			}
 		}
-		cout << res << endl;
+		cout << "result : " << res << endl;
 
 	}
 }
