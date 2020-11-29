@@ -28,18 +28,6 @@ int main() {
 
 		}
 
-		//print
-		/*
-		for (int i = 1; i <= V; i++) {
-			cout << i << " : ";
-			for (vector<pair<int, float> >::iterator it = map[i].begin(); it != map[i].end(); ++it) {
-				cout << it->first << "," << it->second << " / ";
-			}
-			cout << endl;
-		}
-		cout << endl;
-		*/
-
 		vector<float> now;
 		vector<float> pre;
 
@@ -60,9 +48,7 @@ int main() {
 			for (int i = 1; i <= V; i++) {
 				for (vector<pair<int, float> >::iterator it = map[i].begin(); it != map[i].end(); ++it) {
 					now[it->first] += pre[i] * it->second;
-				}
-				
-				
+				}		
 			}
 			res = 0;
 			for (int j = 1; j <= V; j++) {
@@ -73,7 +59,6 @@ int main() {
 				}
 			}
 			//cout << endl;
-
 			pre = now;
 			for (int i = 1; i <= V; i++) {
 				now[i] = 0;
