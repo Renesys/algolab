@@ -1,3 +1,50 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+int map[501][501];
+int point[501][501];
+
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		int N, M;
+		f >> N >> M;
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				f >> map[i][j];
+				point[i][j] = 0;
+			}
+		}
+		
+		int res = 0;
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				if (i == 1) {
+					point[i][j] = point[i][j - 1] + map[i][j];
+				}
+				else if (j == 1) {
+					point[i][j] = point[i-1][j] + map[i][j];
+				}
+				else {
+					point[i][j] = min(point[i - 1][j], point[i][j - 1]) + map[i][j];
+				}
+				
+			}
+		}
+
+		printf("#%d %d\n", ca, point[N][M]);
+	}
+	return 0;
+}
+
+
+==========================
 3
 3 5 
 2 7 5 11 6
