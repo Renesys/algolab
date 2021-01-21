@@ -1,3 +1,58 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<deque>
+#include<algorithm>
+using namespace std;
+
+deque<int> dq[6001];
+
+bool cmp(const int a, const int b) {
+	return a > b;
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		long long res = 0;
+
+		//input
+		int N;
+		f >> N;
+		for (int i = 0; i < N; i++) {
+			dq[i].clear();
+			int M, data;
+			f >> M;
+			for (int j = 0; j < M; j++) {
+				f >> data;
+				dq[i].push_back(data);
+			}
+			sort(dq[i].begin(), dq[i].end(), cmp);
+		}
+
+		//logic
+		for (int i = N - 1; i >= 0; i--) {
+			int max = -1;
+			int idx = -1;
+			for (int j = i; j < N; j++) {
+				if (dq[j].size() > 0 && dq[j][0] > max) {
+					max = dq[j][0];
+					idx = j;
+				}
+			}
+			res += max;
+			dq[idx].pop_front();
+		}
+		
+
+		printf("#%d %d\n", ca, res);
+	}
+	return 0;
+}
+
+==============================================
 4
 5
 1
