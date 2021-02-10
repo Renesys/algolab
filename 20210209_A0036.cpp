@@ -1,3 +1,88 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<deque>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int cont[1001];
+vector<int> map[1001];
+vector<int> virus;
+bool chk[1001];
+deque<int> q;
+int V;
+
+void bfs(int n, int t) {
+	cout << "current : " << n << endl;
+	q.pop_front();
+	if (chk[n])
+		return;
+	chk[n] = true;
+	if (cont[n] == 0 || cont[n] > t) {
+		cont[n] = t;
+	}
+	for (auto e : map[n]) {
+		if (!chk[e]) {
+			q.push_back(e);
+			cout << e << " in" << endl;
+			chk[e] = true;
+		}
+	}
+
+	for (int i = 1; i <= V; i++) {
+		cout << cont[i] << ' ';
+	}
+	cout << endl;
+	while (!q.empty()) {
+		int next = q.front();
+		bfs(next, cont[n]+1);
+	} 
+	
+
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		int res = 10000001;
+		int E, N;
+		f >> V >> E >> N;
+		for (int i = 0; i < N; i++) {
+			int n;
+			f >> n;
+			virus.push_back(n);
+		}
+		for (int i = 1; i <= E; i++) {
+			int s, e;
+			f >> s >> e;
+			map[s].push_back(e);
+			map[e].push_back(s);
+		}
+		for (int i = 1; i <= V; i++) {
+			cont[i] = 0;
+		}
+
+		for (auto v : virus) {
+			q.clear();
+			q.push_back(v);
+			for (int i = 1; i <= V; i++) {
+				chk[i] = false;
+			}
+			bfs(v, cont[v]);
+		}
+
+
+		printf("#%d %d\n", ca, res);
+	}
+	return 0;
+}
+
+
+========================================
+
 3 
 5 6 1 
 1 
