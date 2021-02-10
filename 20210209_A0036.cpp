@@ -13,7 +13,6 @@ bool chk[1001];
 deque<pair<int, int> > q;
 
 void bfs(pair<int, int> p) {
-	//cout << "current : " << p.first << endl;
 	q.pop_front();
 	if (chk[p.first])
 		return;
@@ -24,11 +23,8 @@ void bfs(pair<int, int> p) {
 	for (auto e : map[p.first]) {
 		if (!chk[e]) {
 			q.push_back({ e, p.second + 1 });
-			//cout << e << " in" << endl;
 		}
 	}
-	//int next = q.front();
-	//bfs(next, cont[n] + 1);
 }
 
 int main() {
@@ -61,6 +57,7 @@ int main() {
 		}
 
 		for (auto v : virus) {
+			cont[v] = -1;
 			q.clear();
 			q.push_back({ v, 0 });
 			for (int i = 1; i <= V; i++) {
@@ -70,14 +67,6 @@ int main() {
 			while (!q.empty()) {
 				pair<int, int> tp = q.front();
 				bfs(tp);
-
-				/*
-				//print
-				for (int i = 1; i <= V; i++) {
-					cout << cont[i] << ' ';
-				}
-				cout << endl;
-				*/
 			}
 		}
 
@@ -95,7 +84,6 @@ int main() {
 	}
 	return 0;
 }
-
 
 ========================================
 
