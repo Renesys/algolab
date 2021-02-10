@@ -10,36 +10,25 @@ int cont[1001];
 vector<int> map[1001];
 vector<int> virus;
 bool chk[1001];
-deque<int> q;
-int V;
+deque<pair<int, int> > q;
 
-void bfs(int n, int t) {
-	cout << "current : " << n << endl;
+void bfs(pair<int, int> p) {
+	//cout << "current : " << p.first << endl;
 	q.pop_front();
-	if (chk[n])
+	if (chk[p.first])
 		return;
-	chk[n] = true;
-	if (cont[n] == 0 || cont[n] > t) {
-		cont[n] = t;
+	chk[p.first] = true;
+	if (cont[p.first] == 0 || cont[p.first] > p.second) {
+		cont[p.first] = p.second;
 	}
-	for (auto e : map[n]) {
+	for (auto e : map[p.first]) {
 		if (!chk[e]) {
-			q.push_back(e);
-			cout << e << " in" << endl;
-			chk[e] = true;
+			q.push_back({ e, p.second + 1 });
+			//cout << e << " in" << endl;
 		}
 	}
-
-	for (int i = 1; i <= V; i++) {
-		cout << cont[i] << ' ';
-	}
-	cout << endl;
-	while (!q.empty()) {
-		int next = q.front();
-		bfs(next, cont[n]+1);
-	} 
-	
-
+	//int next = q.front();
+	//bfs(next, cont[n] + 1);
 }
 
 int main() {
@@ -48,8 +37,14 @@ int main() {
 	f >> CA;
 	for (int ca = 1; ca <= CA; ca++) {
 		int res = 10000001;
-		int E, N;
+		int V, E, N;
 		f >> V >> E >> N;
+		virus.clear();
+		q.clear();
+		for (int i = 1; i <= V; i++) {
+			map[i].clear();
+		}
+
 		for (int i = 0; i < N; i++) {
 			int n;
 			f >> n;
@@ -67,15 +62,36 @@ int main() {
 
 		for (auto v : virus) {
 			q.clear();
-			q.push_back(v);
+			q.push_back({ v, 0 });
 			for (int i = 1; i <= V; i++) {
 				chk[i] = false;
 			}
-			bfs(v, cont[v]);
+
+			while (!q.empty()) {
+				pair<int, int> tp = q.front();
+				bfs(tp);
+
+				/*
+				//print
+				for (int i = 1; i <= V; i++) {
+					cout << cont[i] << ' ';
+				}
+				cout << endl;
+				*/
+			}
+		}
+
+		int node = -1;
+		int time = -1;
+		for (int i = V; i > 0; i--) {
+			if (cont[i] >= time) {
+				time = cont[i];
+				node = i;
+			}
 		}
 
 
-		printf("#%d %d\n", ca, res);
+		printf("#%d %d %d\n", ca, node, time);
 	}
 	return 0;
 }
