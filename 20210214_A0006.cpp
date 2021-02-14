@@ -22,27 +22,28 @@ struct cmp {
 	}
 };
 
-priority_queue<pair<int, int>, vector<pair<int, int> >, cmp> pq;
+
 
 
 void dijkstra(int N, int V) {
+	priority_queue<pair<int, int>, vector<pair<int, int> >, cmp> pq;
 	int target = N;
 	dist[target] = 0;
 	pq.push(make_pair( N, 0 ));
+
 	while (!pq.empty()) {
 		if (g[target].size() == 0)
 			break;
 		pair<int, int> t = pq.top();
 		target = t.first;
 		pq.pop();
-		chk[target] = true;
+		if (dist[t.first] < t.second)
+			continue;
 		for (auto e : g[target]) {
-			if (!chk[e.first]) {
-				if (dist[e.first] > dist[target] + e.second) {
-					dist[e.first] = dist[target] + e.second;
-				}
-				pq.push(e);
+			if (dist[e.first] > dist[target] + e.second) {
+				dist[e.first] = dist[target] + e.second;
 			}
+			pq.push(make_pair(e.first, dist[target] + e.second));
 		}
 
 		for (int i = 1; i <= V; i++) {
