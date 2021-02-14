@@ -30,7 +30,7 @@ void dijkstra(int N, int V) {
 	int chk_node = 0;
 	dist[target] = 0;
 	while (target == N || !pq.empty()) {
-		if (g[target].size() == 0)
+		if (target == N && g[target].size() == 0)
 			break;
 		if (!pq.empty())
 			pq.pop();
