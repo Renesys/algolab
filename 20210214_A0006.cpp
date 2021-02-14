@@ -27,21 +27,19 @@ priority_queue<pair<int, int>, vector<pair<int, int> >, cmp> pq;
 
 void dijkstra(int N, int V) {
 	int target = N;
-	int chk_node = 0;
 	dist[target] = 0;
-	while (target == N || !pq.empty()) {
-		if (target == N && g[target].size() == 0)
-			break;
-		if (!pq.empty())
-			pq.pop();
+	pq.push(make_pair(N, 0));
+	while (!pq.empty()) {
+		pair<int, int> t = pq.top();
+		target = t.first;
 		chk[target] = true;
-		chk_node++;
+		pq.pop();
 		for (auto e : g[target]) {
 			if (!chk[e.first]) {
 				if (dist[e.first] > dist[target] + e.second) {
 					dist[e.first] = dist[target] + e.second;
 				}
-				pq.push(e);
+				pq.push(make_pair(e.first, dist[e.first]));
 			}
 		}
 
@@ -49,15 +47,7 @@ void dijkstra(int N, int V) {
 			cout << dist[i] << ' ';
 		}
 		cout << endl;
-		
-
-		if (!pq.empty()) {
-			pair<int, int> t = pq.top();
-			target = t.first;
-		}
-		//pq.pop();
 	}
-	
 }
 
 int main() {
