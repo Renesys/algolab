@@ -13,18 +13,14 @@ deque<int> q;
 
 void bfs(int N) {
 	int target = N;
+	bfschk[target] = true;
 	while (!q.empty()) {
-		if (bfschk[target]) {
-			target = q.front();
-			q.pop_front();
-			continue;
-		}
 		cout << target << ' ';
-		bfschk[target] = true;
 		q.pop_front();
 		for (auto e : g[target]) {
 			if (!bfschk[e]) {
 				q.push_back(e);
+				bfschk[e] = true;
 			}
 		}
 		if(!q.empty())
