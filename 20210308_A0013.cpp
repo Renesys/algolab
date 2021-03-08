@@ -1,3 +1,73 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<deque>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int nums[11][11];
+bool chk[11];
+vector<int> v;
+int res = 0;
+
+void permul(int level, int N) {
+	if (v.size() == N) {
+		int idx = 1;
+		int t = 0;
+		for (auto e : v) {
+			//cout << e << ' ';
+			t += nums[idx][e];
+			idx++;
+		}
+		if (t > res)
+			res = t;
+		//cout << endl;
+	}
+	else {
+		for (int i = 1; i <= N; i++) {
+			if (chk[i]) continue;
+			
+			v.push_back(i);
+			chk[i] = true;
+			permul(level + 1, N);
+			v.pop_back();
+			chk[i] = false;
+		}
+	}
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		int N;
+		f >> N;
+		v.clear();
+		for (int i = 1; i <= N; i++) {
+			chk[i] = false;
+		}
+
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				int n;
+				f >> n;
+				nums[i][j] = n;
+			}
+		}
+
+		permul(0, N);
+		printf("#%d %d\n", ca, res);
+
+	}
+	return 0;
+}
+
+
+
+
+=================================
 10
 3
 910 442 760
