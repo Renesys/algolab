@@ -1,13 +1,15 @@
 #include<iostream>
 #include<fstream>
 #include<cstdio>
-#include<deque>
 #include<vector>
 #include<algorithm>
 using namespace std;
 
-vector<int> up;
-vector<int> down;
+vector<int> seoksun;
+vector<int> jongyu;
+
+int A[500001];
+int B[500001];
 
 int main() {
 	ifstream f("input.txt");
@@ -16,44 +18,44 @@ int main() {
 	for (int ca = 1; ca <= CA; ca++) {
 		int N, H;
 		f >> N >> H;
-		up.clear();
-		down.clear();
+		seoksun.clear();
+		jongyu.clear();
+		A[0] = 0;
+		for (int i = 1; i <= H; i++) {
+			A[i] = 0;
+			B[i] = 0;
+		}
 		for (int i = 0; i < N/2; i++) {
-			int u, d;
-			f >> u >> d;
-			up.push_back(u);
-			down.push_back(d);
+			int s, j;
+			f >> s >> j;
+			B[1]++;
+			B[s + 1]--;
+			seoksun.push_back(s);
+			B[H - j + 1]++;
+			jongyu.push_back(j);
+		}
+		
+		for (int i = 1; i <= H; i++) {
+			A[i] = A[i - 1] + B[i];
 		}
 
-		sort(up.begin(), up.end());
-		sort(down.begin(), down.end());
-
-		//search from up
-		int upres = 0;
-		int downcheck = H - up.back();
-		for (int i = 0; i < down.size(); i++) {
-			if (down[i] >= downcheck) {
-				upres = down.size() - i;
-				break;
+		long long res = 1000000000;
+		int cnt = 0;
+		for (int i = 1; i <= H; i++) {
+			if (A[i] < res) {
+				res = A[i];
+				cnt = 1;
+			}
+			else if(A[i] == res){
+				cnt++;
 			}
 		}
-
-		//search from down
-		int downres = 0;
-		int upcheck = H - down.back();
-		for (int i = 0; i < up.size(); i++) {
-			if (up[i] >= upcheck) {
-				downres = up.size() - (i-1);
-				break;
-			}
-		}
-
-		int res = upres > downres ? downres : upres;
-		printf("#%d %d\n", ca, res);
+		printf("#%d %lld %d\n", ca, res, cnt);
 
 	}
 	return 0;
 }
+
 
 =================================
 2
