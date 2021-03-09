@@ -7,64 +7,77 @@ using namespace std;
 
 struct Runner {
 	int idx;
-	int abilty;
+	int data;
 };
 
 vector<Runner> r;
 int res = 0;
 
-void checkidx(int ti, int idx) {
-	if (ti < idx) {
-		res += (idx - ti);
+void checkidx(int next, int idx) {
+	if (next < idx) {
+		//cout << "========" << idx << ' ' << next << endl;
+		res += (idx - next);
 	}
 }
 
 vector<Runner> merge(vector<Runner> r1, vector<Runner> r2) {
-	vector<Runner> temp;
-	int idx1 = 0, idx2 = 0;
-	int tidx = 0;
-	while (true) {
-		if (idx1 == r1.size() || idx2 == r2.size())
-			break;
-		if (r1[idx1].abilty > r2[idx2].abilty) {
-			temp.push_back({ tidx, r1[idx1].abilty });
-			checkidx(tidx, r1[idx1].idx);
-			tidx++;
-			idx1++;
-		}
-		else if (r1[idx1].abilty < r2[idx2].abilty) {
-			temp.push_back({ tidx, r2[idx2].abilty });
-			checkidx(tidx, r2[idx2].idx);
-			tidx++;
-			idx2++;
-		}
-		else {
-			temp.push_back({ tidx, r1[idx1].abilty });
-			temp.push_back({ tidx + 1, r2[idx2].abilty });
-			checkidx(tidx, r1[idx1].idx);
-			checkidx(tidx + 1, r2[idx2].idx);
-			idx1++;
-			idx2++;
-			tidx += 2;
-		}
+	/*
+	for (auto t : r1) {
+	/printf("(%d, %d) ", t.idx, t.data);
 	}
-	while (idx2 != r2.size()) {
-		temp.push_back({ tidx++, r2[idx2].abilty });
-		checkidx(tidx, r2[idx2].idx);
-		tidx++;
-		idx2++;
-	}
-	while (idx1 != r1.size()) {
-		checkidx(tidx, r1[idx1].idx);
-		temp.push_back({ tidx, r1[idx1].abilty });
-		tidx++;
-		idx1++;
-	}
-
-	for (auto t : temp) {
-		printf("(%d, %d) ", t.idx, t.abilty);
+	cout << "|| ";
+	for (auto t : r2) {
+		printf("(%d, %d) ", t.idx, t.data);
 	}
 	cout << endl;
+	*/
+	vector<Runner> temp;
+	int f = 0, b = 0;
+	int nextidx = 0;
+	while (true) {
+		if (f == r1.size() || b == r2.size())
+			break;
+		if (r1[f].data > r2[b].data) {
+			temp.push_back({ nextidx, r1[f].data });
+			checkidx(nextidx, r1[f].idx);
+			nextidx++;
+			f++;
+		}
+		else if (r1[f].data < r2[b].data) {
+			temp.push_back({ nextidx, r2[b].data });
+			checkidx(nextidx, r1.size() + r2[b].idx);
+			nextidx++;
+			b++;
+		}
+		else {
+			temp.push_back({ nextidx, r1[f].data });
+			temp.push_back({ nextidx + 1, r2[b].data });
+			checkidx(nextidx, r1[f].idx);
+			checkidx(nextidx + 1, r1.size() + r2[b].idx);
+			f++;
+			b++;
+			nextidx += 2;
+		}
+	}
+	while (b != r2.size()) {
+		temp.push_back({ nextidx++, r2[b].data });
+		checkidx(nextidx, r1.size() + r2[b].idx);
+		nextidx++;
+		b++;
+	}
+	while (f != r1.size()) {
+		checkidx(nextidx, r1[f].idx);
+		temp.push_back({ nextidx, r1[f].data });
+		nextidx++;
+		f++;
+	}
+
+	/*
+	for (auto t : temp) {
+		printf("(%d, %d) ", t.idx, t.data);
+	}
+	cout << endl;
+	*/
 
 	return temp;
 }
@@ -98,7 +111,7 @@ int main() {
 		for (int i = 0; i < N; i++) {
 			int a;
 			f >> a;
-			r.push_back({ i, a });
+			r.push_back({ 0, a });
 		}
 
 		r = mergesort(r);
@@ -108,5 +121,7 @@ int main() {
 	}
 	return 0;
 }
+
+
 
 
