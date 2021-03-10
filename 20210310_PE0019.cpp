@@ -1,14 +1,12 @@
 #include<iostream>
 #include<fstream>
 #include<cstdio>
-#include<vector>
-#include<queue>
 #include<algorithm>
 #define MAX 1000000007
 using namespace std;
 
 
-int tree[200005];
+long long tree[500000];
 int S;
 
 void insert(int i, int n) {
@@ -94,6 +92,7 @@ int main() {
 	}
 	return 0;
 }
+
 
 
 
