@@ -1,3 +1,79 @@
+
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#define MAX 1000000007
+using namespace std;
+
+int h[10001];
+int N;
+
+void insert(int n, int i) {
+	if (i == 1) {
+		h[i] = n;
+		return;
+	}
+	h[i] = n;
+	while(h[i / 2] < n){
+		if (i == 1) break;
+		swap(h[i / 2], h[i]);
+		i /= 2;
+	}
+}
+
+
+int pop() {
+	int get = h[1];
+	swap(h[1], h[N]);
+	h[N] = 0;
+	N--;
+	int i = 1;
+	while (h[i] < h[i * 2] || h[i] < h[i * 2 + 1]) {
+		if (i * 2 > N) break;
+		if (h[i * 2] > h[i * 2 + 1]) {
+			swap(h[i], h[i * 2]);
+			i = i * 2;
+		}
+		else {
+			swap(h[i], h[i * 2 + 1]);
+			i = i * 2 + 1;
+		}
+	}
+	return i;
+}
+
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		long long res = 0;
+		f >> N;
+		for (int i = 1; i <= N; i++) {
+			int n;
+			f >> n;
+			insert(n, i);
+		}
+
+		int t = pop();
+		int a = log2(t);
+		int b = t - pow(2, a) + 1;
+
+		printf("#%d %d %d\n", ca, a, b);
+
+	}
+	return 0;
+}
+
+
+
+========================
+
+
 10
 5
 9 7 1 6 3
