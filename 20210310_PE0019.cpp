@@ -1,3 +1,104 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#define MAX 1000000007
+using namespace std;
+
+
+int tree[200005];
+int S;
+
+void insert(int i, int n) {
+	i = S + i - 1;
+	int offset = n - tree[i];
+	while (i != 1) {
+		tree[i] += offset;
+		i /= 2;
+	}
+	tree[i] += offset;
+
+}
+
+int sum(int l, int r) {
+	int ret = 0;
+	l = S + l - 1;
+	r = S + r - 1;
+	while (l <= r) {
+		if (l % 2 == 1) {
+			ret += tree[l];
+			l = (l + 1) / 2;
+		}
+		else {
+			l /= 2;
+		}
+		if (r % 2 == 0) {
+			ret += tree[r];
+			r = (r - 1) / 2;
+		}
+		else {
+			r /= 2;
+		}
+	}
+	return ret;
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+	for (int ca = 1; ca <= CA; ca++) {
+		int N, Q;
+		f >> N >> Q;
+		long long res = 0;
+
+		//index tree init
+		int a = log2(N);
+		if (pow(2, a) == N) {
+			a--;
+		}
+		S = pow(2, a + 1);
+		int size = pow(2, a+2);
+		for (int i = S; i < size; i++) {
+			if (i >= S + N) {
+				tree[i] = 0;
+			}
+			else {
+				tree[i] = i - S + 1;
+			}
+		}
+		for (int i = S - 1; i > 0; i--) {
+			tree[i] = tree[i * 2] + tree[i * 2 + 1];
+		}
+
+		//query
+		for (int i = 0; i < Q; i++) {
+			int type, a, b;
+			f >> type >> a >> b;
+			if (type == 0) {
+				//printf("insert %d\n", b);
+				insert(a, b);
+			}
+			else if (type == 1) {
+				//printf("check %d to %d\n", a, b);
+				res += sum(a, b);
+				if (res > MAX) {
+					res %= MAX;
+				}
+			}
+		}
+
+		printf("#%d %lld\n", ca, res);
+	}
+	return 0;
+}
+
+
+
+=====================================
+
 3
 5
 7
