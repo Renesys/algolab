@@ -7,30 +7,19 @@
 #define MAX 10000007
 using namespace std;
 
-vector<int> prime;
-int is_prime[100001];
-int chk[100001];
+bool is_prime[1000001];
+int chk[1000001];
 int res;
 
 void make_prime() {
-	int idx = 2;	
-	for (int i = 1; i <= 100000; i++) {
-		is_prime[i] = true;
-	}
+	fill_n(is_prime, 1000000, true);
 	is_prime[0] = is_prime[1] = false;
 	for (int i = 2; i <= 100000; i++) {
 		if (!is_prime[i]) continue;
 		for (int j = i * 2; j <= 100000; j += i) {
 			is_prime[j] = false;
 		}
-	}	
-
-	for (int i = 2; i <= 100000; i++) {
-		if (is_prime[i]) {
-			prime.push_back(i);
-		}
 	}
-
 }
 
 int main() {
@@ -47,14 +36,17 @@ int main() {
 
 		bool chk = true;
 		int num = 0;
-		for (auto p : prime) {
+		for (int p = 2; p < L; p++) {
+			if (!is_prime[p]) {
+				continue;
+			}
 			if (!chk) break;
-			if (L < p) break;
+			if (L <= p) break;
 			//cout << "prime : " << p << endl;
 			
 			int pivot = 0;
 			for (int i = 0; i < K.size(); i++) {
-				int a = pivot * 10 + (K[i] - '0');
+				long long a = pivot * 10 + (K[i] - '0');
 				pivot = a % p;
 			}
 			if (pivot == 0) {
@@ -73,3 +65,4 @@ int main() {
 	}
 	return 0;
 }
+
