@@ -7,19 +7,39 @@
 #define MAX 10000007
 using namespace std;
 
-bool is_prime[1000001];
-int chk[1000001];
-int res;
+vector<int> prime;
+int is_prime[1000001];
 
 void make_prime() {
-	fill_n(is_prime, 1000000, true);
+	int idx = 2;
+	for (int i = 1; i <= 1000000; i++) {
+		is_prime[i] = true;
+	}
 	is_prime[0] = is_prime[1] = false;
-	for (int i = 2; i <= 100000; i++) {
+	for (int i = 2; i <= 1000000; i++) {
 		if (!is_prime[i]) continue;
-		for (int j = i * 2; j <= 100000; j += i) {
+		for (int j = i * 2; j <= 1000000; j += i) {
 			is_prime[j] = false;
 		}
 	}
+
+	for (int i = 2; i <= 1000000; i++) {
+		if (is_prime[i]) {
+			prime.push_back(i);
+		}
+	}
+
+}
+
+int getsize(char K[]){
+	int len = 0;
+	for (int i = 0; i <= 100; i++) {
+		if (K[i] == NULL) {
+			len = i;
+			break;
+		}
+	}
+	return len;
 }
 
 int main() {
@@ -29,29 +49,27 @@ int main() {
 	make_prime();
 
 	for (int ca = 1; ca <= CA; ca++) {
-		string K;
+		char K[101];
 		int L;
 		f >> K;
 		f >> L;
 
 		bool chk = true;
 		int num = 0;
-		for (int p = 2; p < L; p++) {
-			if (!is_prime[p]) {
-				continue;
-			}
-			if (!chk) break;
+		int size = getsize(K);
+		for (auto p : prime) {
 			if (L <= p) break;
 			//cout << "prime : " << p << endl;
-			
+
 			int pivot = 0;
-			for (int i = 0; i < K.size(); i++) {
-				long long a = pivot * 10 + (K[i] - '0');
+			for (int i = 0; i < size; i++) {
+				int a = pivot * 10 + (K[i] - '0');
 				pivot = a % p;
 			}
 			if (pivot == 0) {
 				chk = false;
 				num = p;
+				break;
 			}
 		}
 
