@@ -6,7 +6,7 @@
 #include<algorithm>
 #define MAX 1152921504606846976
 using namespace std;
-unsigned long long pas[1002][1002];
+long long pas[1002][1002];
 
 void make_pascal() {
 	pas[0][0] = pas[1][0] = pas[1][1] = 1;
@@ -27,7 +27,13 @@ void make_pascal() {
 	}
 }
 
-void bit(int N, int K, unsigned long long seq) {
+void bit(int N, int K, long long seq) {
+	if (N == K) {
+		for (int i = 0; i < N; i++) {
+			printf("1");
+		}
+		return;
+	}
 	if (N != 1) {
 		if (seq <= pas[N - 1][K] || pas[N - 1][K] == 0) {
 			printf("0");
@@ -50,14 +56,10 @@ int main() {
 	int CA;
 	f >> CA;
 	make_pascal();
-/*
-	for (int i = 0; i <= 100; i++) {
-		printf("%llu\n", pas[100][i]);
-	}
-	*/
+
 	for (int ca = 1; ca <= CA; ca++) {
 		int N, K;
-		unsigned long long S;
+		long long S;
 		f >> N >> K;
 		f >> S;
 
@@ -67,17 +69,3 @@ int main() {
 	}
 	return 0;
 }
-
-=============================================
-
-10
-20 1 13
-20 20 1
-20 11 91593
-20 6 26534
-20 10 84809
-20 5 3233
-20 13 58356
-300 158 1152921504606846976
-500 206 1152921504606846976
-1000 600 1152921504606846976
