@@ -1,10 +1,13 @@
 #include<iostream>
 #include<fstream>
 #include<cstdio>
+#include<vector>
+#include<string>
 #include<algorithm>
 #define MAX 1152921504606846976
+#define LONGMAX 9223372036854000000
 using namespace std;
-long long pas[1002][1002];
+unsigned long long pas[1002][1002];
 
 void make_pascal() {
 	pas[0][0] = pas[1][0] = pas[1][1] = 1;
@@ -15,7 +18,7 @@ void make_pascal() {
 				pas[i][j] = pas[i][i] = 1;
 			}
 			else {
-				if ((pas[i - 1][j - 1] > MAX/2) && (pas[i - 1][j] > MAX/2)) {
+				if ((pas[i - 1][j - 1] > LONGMAX/2) && (pas[i - 1][j] > LONGMAX/2)) {
 					break;
 				}
 				pas[i][j] = pas[i][i - j] = pas[i - 1][j - 1] + pas[i - 1][j];
@@ -25,7 +28,9 @@ void make_pascal() {
 	}
 }
 
-void bit(int N, int K, long long seq) {
+void bit(int N, int K, unsigned long long seq) {
+	//printf("%d %d %llu %llu ------->", N, K, seq, pas[N - 1][K]);
+
 	if (N == K) {
 		for (int i = 0; i < N; i++) {
 			printf("1");
@@ -57,7 +62,7 @@ int main() {
 
 	for (int ca = 1; ca <= CA; ca++) {
 		int N, K;
-		long long S;
+		unsigned long long S;
 		f >> N >> K;
 		f >> S;
 
