@@ -1,8 +1,6 @@
 #include<iostream>
 #include<fstream>
 #include<cstdio>
-#include<vector>
-#include<string>
 #include<algorithm>
 #define MAX 1152921504606846976
 using namespace std;
@@ -12,16 +10,16 @@ void make_pascal() {
 	pas[0][0] = pas[1][0] = pas[1][1] = 1;
 
 	for (int i = 2; i <= 1000; i++) {
-		for (int j = 0; j <= i/2; j++) {
+		for (int j = 0; j <= i / 2; j++) {
 			if (j == 0) {
-				pas[i][j] = pas [i][i] = 1;
+				pas[i][j] = pas[i][i] = 1;
 			}
 			else {
-				if (MAX < pas[i - 1][j - 1] + pas[i - 1][j]) {
+				if ((pas[i - 1][j - 1] > MAX/2) && (pas[i - 1][j] > MAX/2)) {
 					break;
-				}		
+				}
 				pas[i][j] = pas[i][i - j] = pas[i - 1][j - 1] + pas[i - 1][j];
-				
+
 			}
 		}
 	}
