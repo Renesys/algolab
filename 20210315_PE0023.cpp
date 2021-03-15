@@ -1,3 +1,80 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+int G[100001];
+int W[100001];
+
+int find(int N) {
+	if (G[N] == N) {
+		return N;
+	}
+	return G[N] = find(G[N]);
+}
+
+void uni(int a, int b) {
+	int pa = find(a);
+	int pb = find(b);
+	if (pa == pb) {
+		return;
+	}
+	if (W[pa] > W[pb]) {
+		G[pb] = pa;
+	}
+	else if(W[pa] < W[pb]){
+		G[pa] = pb;
+	}
+	else {
+		G[pb] = pa;
+		W[pa]++;
+	}
+}
+
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+
+	for (int ca = 1; ca <= CA; ca++) {
+		int N, Q;
+		f >> N >> Q;
+
+		for (int i = 1; i <= N; i++) {
+			G[i] = i;
+			W[i] = 1;
+		}
+
+		int res = 0;
+		for (int i = 1; i <= Q; i++) {
+			int t, a, b;
+			f >> t >> a >> b;
+
+			if (t == 0) {
+				uni(a, b);
+				/*
+				for (int j = 1; j <= N; j++) {
+					cout << G[j] << ' ';
+				}
+				cout << endl;
+				*/
+			}
+			else if (t == 1) {
+				if (find(a) == find(b)) {
+					res++;
+				}
+			}
+		}
+
+		printf("#%d %d\n", ca, res);
+	}
+	return 0;
+}
+
+==========================================
+3
 7
 9
 0 1 3
