@@ -1,3 +1,87 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<deque>
+#include<algorithm>
+using namespace std;
+
+struct Edge {
+	int src;
+	int dest;
+	int cost;
+};
+
+vector<Edge> v;
+
+int G[50001];
+int W[50001];
+
+int find(int N) {
+	if (G[N] == N) {
+		return N;
+	}
+	return G[N] = find(G[N]);
+}
+
+void uni(int a, int b) {
+	int pa = G[a];
+	int pb = G[b];
+
+	if (W[pa] > W[pb]) {
+		G[pb] = pa;
+	}
+	else if (W[pa] < W[pb]) {
+		G[pa] = pb;
+	}
+	else {
+		G[pa] = pb;
+		W[pb]++;
+	}
+}
+
+bool cmp(const Edge &a, const Edge &b) {
+	return a.cost < b.cost;
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+
+	for (int ca = 1; ca <= CA; ca++) {
+		int V, E;
+		f >> V >> E;
+
+		v.clear();
+		for (int i = 1; i <= V; i++) {
+			G[i] = i;
+			W[i] = 0;
+		}
+
+		for (int i = 1; i <= E; i++) {
+			int s, e, c;
+			f >> s >> e >> c;
+			v.push_back({ s, e, c });
+		}
+
+		sort(v.begin(), v.end(), cmp);
+
+		long long res = 0;
+		for (auto e : v) {
+			if (find(G[e.src]) != find(G[e.dest])) {
+				uni(e.src, e.dest);
+				res += e.cost;
+			}
+		}
+
+		printf("#%d %lld\n", ca, res);
+
+	}
+	return 0;
+}
+
+================================
 3
 5
 8
