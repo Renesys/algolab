@@ -1,3 +1,88 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<deque>
+#include<algorithm>
+using namespace std;
+
+vector<int> G[100001];
+int order[100001];
+bool chk[100001];
+int seq;
+
+int dfs(int N, bool is_root) {
+	order[N] = ++seq;
+	int ret = order[N];
+	int child = 0;
+
+	for (auto e : G[N]) {
+		if (order[e]) {
+			ret = min(ret, order[e]);
+			continue;
+		}
+		child++;
+		int pre = dfs(e, false);
+		if (!is_root && pre >= order[N]) {
+			chk[N] = true;
+		}
+		ret = min(ret, pre);
+	}
+	if (is_root && child >= 2) {
+		chk[N] = true;
+		
+	}
+	
+	return ret;
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+
+	for (int ca = 1; ca <= CA; ca++) {
+		int V, E;
+		f >> V >> E;
+		//init
+		seq = 0;
+		for (int i = 1; i <= V; i++) {
+			G[i].clear();
+			chk[i] = false;
+			order[i] = 0;
+		}
+		for (int i = 1; i <= E; i++) {
+			int a, b;
+			f >> a >> b;
+			G[a].push_back(b);
+			G[b].push_back(a);
+		}
+
+		for (int i = 1; i <= V; i++) {
+			if (!order[i]) {
+				dfs(i, true);
+			}
+		}
+
+		int cnt = 0;
+		for (int i = 1; i <= V; i++) {
+			if (chk[i]) {
+				cnt++;
+			}
+		}
+		printf("#%d %d ", ca, cnt);
+		for (int i = 1; i <= V; i++) {
+			if (chk[i]) {
+				printf("%d ", i);
+			}
+		}
+		printf("\n");
+
+	}
+	return 0;
+}
+
+======================================================
 30
 9 10
 4 1
