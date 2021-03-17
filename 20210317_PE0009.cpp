@@ -2,9 +2,9 @@
 #include<fstream>
 #include<cstdio>
 #include<vector>
-#include<deque>
+#include<queue>
 #include<algorithm>
-#define MAX 10000000000007
+#define MAX 1000000000
 using namespace std;
 
 struct Edge {
@@ -15,25 +15,48 @@ struct Edge {
 vector<Edge> G[100001];
 bool chk[100001];
 long long dist[100001];
+int V;
 
+struct cmp {
+	bool operator()(pair<int, long long> &a, pair<int, long long> &b) {
+		if (a.second == b.second) {
+			return a.first < b.first;
+		}
+		return a.second > b.second;
+	}
+};
 
 void dijkstra(int N) {
-	if (chk[N] || N == 0) {
-		return;
-	}
-	chk[N] = true;
+	priority_queue<pair<int, long long>, vector<pair<int, long long> >, cmp> pq;
+	int node = N;
+	pq.push(make_pair(node, 0));
 
-	long long tempdist = MAX;
-	int next = 0;
-	for (auto e : G[N]) {
-		dist[e.dest] = min(dist[e.dest], dist[N] + e.cost);
-		if (!chk[e.dest] && tempdist > dist[e.dest]) {
-			tempdist = dist[e.dest];
-			next = e.dest;
+	while (!pq.empty()) {
+		if (G[node].size() == 0) break;
+		pair<int, long long> p = pq.top();
+		node = p.first;
+
+		//cout << node << endl;
+		chk[node] = true;
+		pq.pop();
+
+		if (dist[node] < p.second) {
+			continue;
 		}
+
+		for (auto e : G[node]) {
+			if (!chk[e.dest] && dist[e.dest] > dist[node] + e.cost) {
+				dist[e.dest] = dist[node] + e.cost;
+				pq.push(make_pair(e.dest, dist[e.dest]));
+			}
+		}
+		/*
+		for (int i = 1; i <= V; i++) {
+			cout << dist[i] << ' ';
+		}
+		cout << endl;
+		*/
 	}
-	dijkstra(next);
-	return;
 }
 
 int main() {
@@ -42,7 +65,7 @@ int main() {
 	f >> CA;
 
 	for (int ca = 1; ca <= CA; ca++) {
-		int V, E;
+		int E;
 		f >> V >> E;
 
 		for (int i = 1; i <= V; i++) {
