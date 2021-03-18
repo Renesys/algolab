@@ -42,13 +42,11 @@ int main() {
 		//search
 		vector<char> res;
 		int a = A.size() - 1;
-		int b = B.size() - 1;
-		while (a != 0 && b != 0) {
-			if (D[b][a] != D[b][a - 1]) {
-				res.push_back(A[a]);
-				b--;
+		for (int b = B.size() - 1; b > 0; b--) {
+			if (D[b][a] != D[b-1][a]) {
+				res.push_back(B[b]);
+				a--;
 			}
-			a--;
 		}
 
 		printf("#%d ", ca);
