@@ -28,24 +28,37 @@ int main() {
 			}
 		}
 
-		for (int i = 1; i < B.size(); i++) {
-			for (int j = 1; j < A.size(); j++) {
-				if (A[j] == B[i]) {
+		for (int i = 1; i < A.size(); i++) {
+			for (int j = 1; j < B.size(); j++) {
+				if (A[i] == B[j]) {
 					D[i][j] = D[i - 1][j - 1] + 1;
 				}
 				else {
 					D[i][j] = max(D[i - 1][j], D[i][j - 1]);
 				}
 			}
+
+			for (int j = 1; j < A.size(); j++) {
+				cout << D[i][j] << ' ';
+			}
+			cout << endl;
 		}
 
 		//search
 		vector<char> res;
 		int a = A.size() - 1;
-		for (int b = B.size() - 1; b > 0; b--) {
-			if (D[b][a] != D[b-1][a]) {
-				res.push_back(B[b]);
+		int b = B.size() - 1;
+		while (D[a][b] != 0) {
+			if (D[a][b] == D[a][b - 1]) {
+				b--;
+			}
+			else if (D[a][b] == D[a - 1][b]) {
 				a--;
+			}
+			else if (D[a][b] - 1 == D[a - 1][b - 1]) {
+				res.push_back(A[a]);
+				a--;
+				b--;
 			}
 		}
 
