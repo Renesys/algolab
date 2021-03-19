@@ -1,3 +1,75 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+
+int C[1000001];
+int D[1000001][2];
+int N;
+
+int diff(int a, int b) {
+	if (a > b) {
+		swap(a, b);
+	}
+	return min(b - a, a - b + N);
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+
+	for (int ca = 1; ca <= CA; ca++) {
+		f >> N;
+
+		for (int i = 0; i <= N; i++) {
+			C[i] = 0;
+			D[i][0] = D[i][1] = 0;
+		}
+
+		for (int i = 1; i <= N; i++) {
+			int c;
+			f >> c;
+			C[c] = i;
+		}
+
+		D[1][0] = D[0][0] + diff(1, C[1]);
+		D[2][0] = D[1][0] + diff(C[1], C[2]);
+		D[2][1] = diff(1, C[2]) + diff(C[1], C[2]);
+
+		for (int i = 3; i <= N; i++) {
+			if (i == 3) {
+				D[3][0] = min(D[2][0] + diff(C[2], C[3]), D[2][1] + diff(C[1], C[3]));
+				D[3][1] = D[1][0] + diff(C[1], C[3]) + diff(C[2], C[3]); 
+			}
+			else {
+				D[i][0] = min(D[i - 1][0] + diff(C[i - 1], C[i]), D[i - 1][1] + diff(C[i - 2], C[i]));
+				D[i][1] = min(D[i - 2][0] + diff(C[i - 2], C[i]) + diff(C[i-1], C[i]), 
+					D[i - 2][1] + diff(C[i - 3], C[i]) + diff(C[i - 1], C[i]));
+			}
+		}
+
+		/*
+		for (int i = 1; i <= N; i++) {
+			cout << D[i][0] << ' ';
+		}
+		cout << endl;
+		for (int i = 1; i <= N; i++) {
+			cout << D[i][1] << ' ';
+		}
+		cout << endl;
+		*/
+
+		printf("#%d %d\n", ca, min(D[N][0], D[N][1]));
+	}
+	return 0;
+}
+
+
+
+=========================================
 10
 5
 1 3 2 5 4
