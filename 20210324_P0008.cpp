@@ -1,3 +1,146 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+#define MAX 1000000000
+using namespace std;
+
+struct Query {
+	int type;
+	int a;
+	int b;
+};
+
+struct Edge {
+	int src;
+	int dest;
+	bool avail;
+};
+
+vector<Edge> edge;
+vector<Query> Q;
+int P[100001];
+int W[100001];
+
+int find(int N) {
+	if (P[N] == N) {
+		return N;
+	}
+	return P[N] = find(P[N]);
+}
+
+void uni(int a, int b) {
+	int pa = find(a);
+	int pb = find(b);
+
+	if (pa == pb) {
+		return;
+	}
+
+	if (W[pa] < W[pb]) {
+		P[pa] = pb;
+	}
+	else if (W[pa] > W[pb]) {
+		P[pb] = pa;
+	}
+	else {
+		P[pa] = pb;
+		W[pb]++;
+	}
+
+}
+
+int main() {
+	ifstream f("input.txt");
+	int CA;
+	f >> CA;
+
+	for (int ca = 1; ca <= CA; ca++) {
+		int V, E;
+		f >> V >> E;
+
+		edge.clear();
+		Q.clear();
+		for (int i = 1; i <= V; i++) {
+			P[i] = i;
+			W[i] = 1;
+		}
+
+		for (int i = 1; i <= E; i++) {
+			int s, e;
+			f >> s >> e;
+			edge.push_back({ s, e, true });
+
+		}
+
+		//insert query
+		int q;
+		f >> q;
+		for (int i = 1; i <= q; i++) {
+			int t, a, b = 0;
+			f >> t;
+			if (t == 1) {
+				f >> a;
+				Q.push_back({ t, a - 1, 0 });
+				edge[a - 1].avail = false;
+			}
+			else if (t == 2) {
+				f >> a >> b;
+				Q.push_back({ t, a, b });
+			}
+		}
+
+		//make disjoint set
+		for (auto e : edge) {
+			if (e.avail) {
+				uni(e.src, e.dest);
+			}
+		}
+
+		/*
+		for (int i = 1; i <= V; i++) {
+			cout << P[i] << ' ';
+		}
+		cout << endl;
+		*/
+
+
+		//searching reverse
+		vector<int> res;
+		
+		while (!Q.empty()) {
+			Query q = Q.back();
+			Q.pop_back();
+			if (q.type == 1) {
+				edge[q.a].avail = true;
+				uni(edge[q.a].src, edge[q.a].dest);
+			}
+			else if (q.type == 2) {
+				if (find(q.a) == find(q.b)) {
+					res.push_back(1);
+				}
+				else {
+					res.push_back(0);
+				}
+			}
+		}
+
+		//print result
+		printf("#%d ", ca);
+		while (!res.empty()) {
+			printf("%d", res.back());
+			res.pop_back();
+		}
+		printf("\n");
+		
+	}
+	return 0;
+}
+
+
+===============================================
+
 7
 8 12
 3 2
